@@ -76,7 +76,7 @@ Already using signed licenses. Optional next steps:
 export SCRUBBY_PRIVATE_KEY_B64=your_private_key_b64
 export SCRUBBY_LICENSE_OUT_DIR=./licenses
 export STRIPE_WEBHOOK_SECRET=whsec_xxx
-cargo run --bin stripe_webhook
+cargo run --bin license_minter
 ```
 
 ### Render Deploy (Fast Path)
@@ -88,7 +88,7 @@ cargo run --bin stripe_webhook
    ```
 3. Start command:
    ```bash
-   ./target/release/stripe_webhook
+   ./target/release/license_minter
    ```
 4. Set env vars:
    - `STRIPE_WEBHOOK_SECRET`
@@ -99,7 +99,7 @@ cargo run --bin stripe_webhook
 
 ### Local E2E Test (No external services)
 ```bash
-cargo test -p scrubby stripe_webhook::tests::verifies_signature
+cargo test -p scrubby license_minter::tests::verifies_signature
 ```
 
 ## End-to-End Test (Stripe Test Mode)

@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: scrubby-stripe-webhook
+    name: license-minter
     env: rust
     plan: free
     buildCommand: cargo build --release
-    startCommand: ./target/release/stripe_webhook
+    startCommand: ./target/release/license_minter
     envVars:
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
