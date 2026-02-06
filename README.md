@@ -24,16 +24,6 @@ Then run:
 ./target/release/scrubby --clipboard
 ```
 
-## Deploy Webhook (Render)
-One‑click deploy for automated license delivery:
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kevintatou/scrubby)
-
-After deploy, set:
-- `STRIPE_WEBHOOK_SECRET`
-- `SCRUBBY_PRIVATE_KEY_B64`
-- `SCRUBBY_LICENSE_OUT_DIR=/tmp/licenses`
-
 Install script (coming soon):
 ```
 curl -fsSL https://example.com/scrubby/install.sh | sh
@@ -140,3 +130,4 @@ scrubby --clipboard
 
 ## Privacy
 Scrubby has no telemetry and no network access. Everything happens locally.
+# tatou
