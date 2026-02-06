@@ -40,7 +40,6 @@ Distribution (today):
 - Share the binary directly or upload to GitHub Releases.
 
 Getting paid (simple starting path):
-- Use Stripe Checkout and a webhook to generate device-bound licenses.
 - Users place `license.key` at `~/.config/scrubby/license.key`.
 - Pro features are gated locally; no network calls required.
 
