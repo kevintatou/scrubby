@@ -66,41 +66,18 @@ Already using signed licenses. Optional next steps:
 9. Create Stripe Checkout product and test payment.
 
 ## Automated License Delivery (Stripe)
+- Use the separate **license-minter** service repo.
 - Create a Stripe Checkout product.
 - Add `device_id` to Checkout `metadata`.
 - Listen for `checkout.session.completed` webhook.
 - Webhook generates device-bound `license.key`.
 
-### Local Webhook (Rust)
-```bash
-export SCRUBBY_PRIVATE_KEY_B64=your_private_key_b64
-export SCRUBBY_LICENSE_OUT_DIR=./licenses
-export STRIPE_WEBHOOK_SECRET=whsec_xxx
-cargo run --bin license_minter
-```
-
-### Render Deploy (Fast Path)
-1. Create a **Render Web Service** from this repo.
-   - Or use `render.yaml` for one-click deploy.
-2. Build command:
-   ```bash
-   cargo build --release
-   ```
-3. Start command:
-   ```bash
-   ./target/release/license_minter
-   ```
-4. Set env vars:
-   - `STRIPE_WEBHOOK_SECRET`
-   - `SCRUBBY_PRIVATE_KEY_B64`
-   - `SCRUBBY_LICENSE_OUT_DIR` (e.g., `/tmp/licenses`)
-5. In Stripe, set webhook URL to:
-   - `https://<your-render-app>.onrender.com/webhook`
+### License Minter Service
+- Repo: `https://github.com/kevintatou/license-minter`
+- Deploy with its `render.yaml`.
 
 ### Local E2E Test (No external services)
-```bash
-cargo test -p scrubby license_minter::tests::verifies_signature
-```
+Run tests inside the `license-minter` repo.
 
 ## End-to-End Test (Stripe Test Mode)
 1. Generate a device id:
