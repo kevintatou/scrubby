@@ -46,7 +46,9 @@ Already using signed licenses. Optional next steps:
    ```
 3. Ask customer to run:
    ```bash
-   scrubby --device-id
+   ./target/release/scrubby --device-id
+   # or after install:
+   # ./scripts/install-local.sh && scrubby --device-id
    ```
    and send you the output.
 4. Create a license file for a customer:

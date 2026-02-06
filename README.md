@@ -27,7 +27,7 @@ Then run:
 ## Deploy Webhook (Render)
 One‑click deploy for automated license delivery:
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=REPLACE_WITH_YOUR_GITHUB_REPO_URL)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kevintatou/scrubby)
 
 After deploy, set:
 - `LEMON_WEBHOOK_SECRET`
