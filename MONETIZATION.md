@@ -20,7 +20,7 @@ Pro:
 Scrubby uses signed offline license files. No login, no telemetry, no SaaS dependency.
 
 Distribution and payment (simple path):
-- Sell a license file via Gumroad/Lemonsqueezy.
+- Use Stripe Checkout + webhook.
 - Deliver a per-user `license.key` file.
 - User places it at `~/.config/scrubby/license.key`.
 

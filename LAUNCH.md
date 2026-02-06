@@ -2,7 +2,7 @@
 
 ## Quick Answers
 - **Do I need a GitHub repo?** Not strictly, but it’s the fastest way to host binaries and the landing page. Recommended.
-- **Will Gumroad/LemonSqueezy protect licenses?** No. They handle payment + delivery. License enforcement is on us.
+- **Will Stripe protect licenses?** No. Payment is Stripe; license enforcement is on us.
 - **Can it be hacked?** Any offline license can be shared or patched. We can deter, not prevent.
 
 ## Recommended Hosting (Fastest Today)
@@ -10,9 +10,8 @@
    - Upload `scrubby` binary and `checksums.txt`.
 2. **GitHub Pages**
    - Host `docs/index.html` as the landing page.
-3. **Gumroad or LemonSqueezy**
-   - Sell a license file `license.key`.
-   - Deliver it automatically after purchase.
+3. **Stripe**
+   - Use Stripe Checkout + webhook for automated license delivery.
 4. **Webhook hosting (fastest today)**
    - Render Web Service for the webhook.
 
@@ -64,20 +63,20 @@ Already using signed licenses. Optional next steps:
    - Attach `scrubby` and `checksums.txt`.
 8. Enable GitHub Pages:
    - Use `/docs` folder (landing page).
-9. Create Gumroad/Lemon product:
-   - Deliver a `license.key` file.
+9. Create Stripe Checkout product and test payment.
 
-## Optional: Automated License Delivery
-- Use LemonSqueezy webhooks to generate and deliver licenses automatically. Webhooks include `X-Event-Name`, `X-Signature`, and `meta.custom_data`. citeturn0search2
-- LemonSqueezy signs requests using an HMAC hex digest in `X-Signature`. Validate against your signing secret. citeturn0search4
-- A webhook can call `license_sign` with purchaser email + device id and email the license file.
+## Automated License Delivery (Stripe)
+- Create a Stripe Checkout product.
+- Add `device_id` to Checkout `metadata`.
+- Listen for `checkout.session.completed` webhook.
+- Webhook generates device-bound `license.key`.
 
 ### Local Webhook (Rust)
 ```bash
-export LEMON_WEBHOOK_SECRET=your_secret
 export SCRUBBY_PRIVATE_KEY_B64=your_private_key_b64
 export SCRUBBY_LICENSE_OUT_DIR=./licenses
-cargo run --bin ls_webhook
+export STRIPE_WEBHOOK_SECRET=whsec_xxx
+cargo run --bin stripe_webhook
 ```
 
 ### Render Deploy (Fast Path)
@@ -89,22 +88,32 @@ cargo run --bin ls_webhook
    ```
 3. Start command:
    ```bash
-   ./target/release/ls_webhook
+   ./target/release/stripe_webhook
    ```
 4. Set env vars:
-   - `LEMON_WEBHOOK_SECRET`
+   - `STRIPE_WEBHOOK_SECRET`
    - `SCRUBBY_PRIVATE_KEY_B64`
    - `SCRUBBY_LICENSE_OUT_DIR` (e.g., `/tmp/licenses`)
-5. In LemonSqueezy, set webhook URL to:
+5. In Stripe, set webhook URL to:
    - `https://<your-render-app>.onrender.com/webhook`
 
 ### Local E2E Test (No external services)
 ```bash
-cargo test -p scrubby ls_webhook::tests::end_to_end_webhook_writes_license
+cargo test -p scrubby stripe_webhook::tests::verifies_signature
 ```
 
-### LemonSqueezy Checkout Custom Data
-- Pass `device_id` via checkout custom data so it arrives in webhook `meta.custom_data` (required for device-bound licenses). citeturn0search5turn0search2
+## End-to-End Test (Stripe Test Mode)
+1. Generate a device id:
+   ```bash
+   ./target/release/scrubby --device-id
+   ```
+2. Create a Stripe test Checkout Session or Payment Link and set metadata:
+   - `device_id=<value>`
+3. Complete a test payment using:
+   - `4242 4242 4242 4242`
+4. Check Render logs for a 200 OK from `/webhook`.
+5. Confirm the license file was written in `SCRUBBY_LICENSE_OUT_DIR` on the server.
+
 
 ## Communication Notes
 - State clearly: Pro licenses are device-bound.

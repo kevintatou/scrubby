@@ -30,7 +30,7 @@ One‑click deploy for automated license delivery:
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kevintatou/scrubby)
 
 After deploy, set:
-- `LEMON_WEBHOOK_SECRET`
+- `STRIPE_WEBHOOK_SECRET`
 - `SCRUBBY_PRIVATE_KEY_B64`
 - `SCRUBBY_LICENSE_OUT_DIR=/tmp/licenses`
 
@@ -50,8 +50,8 @@ Distribution (today):
 - Share the binary directly or upload to GitHub Releases.
 
 Getting paid (simple starting path):
-- Sell a license file (e.g., `license.key`) via Gumroad/Lemonsqueezy.
-- Users place it at `~/.config/scrubby/license.key`.
+- Use Stripe Checkout and a webhook to generate device-bound licenses.
+- Users place `license.key` at `~/.config/scrubby/license.key`.
 - Pro features are gated locally; no network calls required.
 
 ### Linux prerequisites
