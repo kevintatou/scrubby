@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scrubby — Clipboard Sanitizer for AI</title>
+    <style>
+      :root {
+        --bg: #0f1411;
+        --bg-2: #0b0f0d;
+        --ink: #f5f3ee;
+        --muted: #c7c2b9;
+        --accent: #f2c14e;
+        --accent-2: #7fd1ae;
+        --card: #161c18;
+        --stroke: #2a342f;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "IBM Plex Sans", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(1200px 700px at 10% -10%, #1a241f 0%, transparent 60%),
+          radial-gradient(900px 600px at 90% 10%, #1d2a24 0%, transparent 60%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      }
+
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 56px 24px 80px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .logo {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 32px;
+        margin-top: 42px;
+        align-items: center;
+      }
+
+      .hero h1 {
+        font-size: clamp(36px, 5vw, 64px);
+        line-height: 1.05;
+        margin: 0 0 16px;
+      }
+
+      .hero p {
+        font-size: 18px;
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+
+      .cta {
+        display: inline-flex;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 18px;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #1b1608;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(127, 209, 174, 0.15);
+        border: 1px solid rgba(127, 209, 174, 0.4);
+        color: var(--accent-2);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--stroke);
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      .code {
+        background: #0b100d;
+        border: 1px solid #223029;
+        border-radius: 12px;
+        padding: 16px;
+        font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+        font-size: 14px;
+        color: #e6e1d5;
+        white-space: pre-wrap;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .grid h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      .grid p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .section {
+        margin-top: 48px;
+      }
+
+      .section h2 {
+        font-size: 28px;
+        margin: 0 0 12px;
+      }
+
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      footer {
+        margin-top: 64px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .two {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo">Scrubby</div>
+        <div class="pill">Local First, Offline</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="tag">Clipboard Safety</div>
+          <h1>Scrub secrets before they hit your AI prompts.</h1>
+          <p>Scrubby is a local-first CLI that sanitizes your clipboard and replaces sensitive data with clear placeholders. No cloud. No telemetry. Explicit run only.</p>
+          <a class="cta" href="#install">Install and Run</a>
+        </div>
+        <div class="card">
+          <div class="tag">Example</div>
+          <div class="code">Input:
+Email a@b.com IP 10.0.0.1 UUID 123e4567-e89b-42d3-a456-556642440000 JWT aaaa.bbbb.cccc TOKEN AbCDeF0123456789AbCDeF0123456789
+
+Output:
+Email &lt;EMAIL&gt; IP &lt;IP&gt; UUID &lt;UUID&gt; JWT &lt;JWT&gt; TOKEN &lt;TOKEN&gt;
+
+Summary:
+Scrubby cleaned your clipboard:
+- Emails: 1
+- IPs: 1
+- UUIDs: 1
+- JWTs: 1
+- Tokens: 1
+Safe to paste.</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="grid">
+          <div class="card">
+            <h3>Clipboard First</h3>
+            <p>One command or one hotkey. It scrubs what you already copied, then puts it back safely.</p>
+          </div>
+          <div class="card">
+            <h3>Private by Design</h3>
+            <p>Scrubby never touches the network. All detection happens locally.</p>
+          </div>
+          <div class="card">
+            <h3>Focused Scope</h3>
+            <p>Emails, IPs, UUIDs, JWTs, and high-entropy tokens. Simple placeholders that read cleanly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="install" class="section">
+        <h2>Install</h2>
+        <div class="two">
+          <div class="card">
+            <div class="tag">Local Build</div>
+            <div class="code">cargo build --release
+./target/release/scrubby --clipboard</div>
+          </div>
+          <div class="card">
+            <div class="tag">Install Script</div>
+            <div class="code">curl -fsSL https://example.com/scrubby/install.sh | sh
+
+Coming soon.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Modes</h2>
+        <div class="two">
+          <div class="card">
+            <div class="tag">Shortcut Mode</div>
+            <div class="code">scrubby --clipboard</div>
+            <p>Bind it to a custom hotkey for instant scrubbing.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Watch Mode (Experimental)</div>
+            <div class="code">scrubby --watch
+scrubby --watch --interval-ms 500</div>
+            <p>Polling watch mode for users who want automatic scrubbing.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Pro (Planned)</h2>
+        <div class="card">
+          <p>Pro is planned, not shipped yet. The roadmap includes stable placeholders, JSON reports, config files, and file/stdin mode.</p>
+        </div>
+      </section>
+
+      <footer>
+        Built for developers who want speed and privacy. No SaaS. No telemetry.
+      </footer>
+    </div>
+  </body>
+</html>

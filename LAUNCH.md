@@ -1,0 +1,127 @@
+# Scrubby Launch Plan (Tomorrow)
+
+## Quick Answers
+- **Do I need a GitHub repo?** Not strictly, but it’s the fastest way to host binaries and the landing page. Recommended.
+- **Will Gumroad/LemonSqueezy protect licenses?** No. They handle payment + delivery. License enforcement is on us.
+- **Can it be hacked?** Any offline license can be shared or patched. We can deter, not prevent.
+
+## Recommended Hosting (Fastest Today)
+1. **GitHub Releases**
+   - Upload `scrubby` binary and `checksums.txt`.
+2. **GitHub Pages**
+   - Host `docs/index.html` as the landing page.
+3. **Gumroad or LemonSqueezy**
+   - Sell a license file `license.key`.
+   - Deliver it automatically after purchase.
+4. **Webhook hosting (fastest today)**
+   - Render Web Service for the webhook.
+
+## What We Ship
+- v0.1 Free: `scrubby --clipboard`
+- v0.1 Pro (build with flags):
+  - `--stable`, `--json`, `--config`, `--stdin`, `--file`
+- Licensing: local file at `~/.config/scrubby/license.key`.
+
+## License Model (Current)
+**Signed license files (offline):**
+- Build with embedded public key via `SCRUBBY_PUBLIC_KEY_B64`.
+- License file is signed with your private key.
+- `SCRUBBY_LICENSE=DEV` works only in debug builds.
+
+## Mitigations (If You Want Stronger Later)
+Already using signed licenses. Optional next steps:
+- Display purchaser email on Pro usage (watermark).
+- Soft device limit (e.g., 2 devices) with warnings.
+
+## Release Checklist
+1. Generate a keypair (keep private key secret):
+   ```bash
+   cargo run --bin license_keygen
+   ```
+   - Save `PRIVATE_KEY_B64` securely (do not commit).
+   - Use `PUBLIC_KEY_B64` to build the binary.
+2. Build Pro:
+   ```bash
+   SCRUBBY_PUBLIC_KEY_B64=<PUBLIC_KEY_B64> cargo build --release --features pro-stable-placeholders,pro-json-report,pro-config,pro-file-stdin
+   ```
+3. Ask customer to run:
+   ```bash
+   scrubby --device-id
+   ```
+   and send you the output.
+4. Create a license file for a customer:
+   ```bash
+   SCRUBBY_PRIVATE_KEY_B64=<PRIVATE_KEY_B64> cargo run --bin license_sign -- --email user@example.com --plan pro --device-id <DEVICE_ID> --out license.key
+   ```
+5. Deliver `license.key` to the customer.
+6. Generate checksum:
+   ```bash
+   sha256sum target/release/scrubby > checksums.txt
+   ```
+7. Create GitHub Release:
+   - Attach `scrubby` and `checksums.txt`.
+8. Enable GitHub Pages:
+   - Use `/docs` folder (landing page).
+9. Create Gumroad/Lemon product:
+   - Deliver a `license.key` file.
+
+## Optional: Automated License Delivery
+- Use LemonSqueezy webhooks to generate and deliver licenses automatically. Webhooks include `X-Event-Name`, `X-Signature`, and `meta.custom_data`. citeturn0search2
+- LemonSqueezy signs requests using an HMAC hex digest in `X-Signature`. Validate against your signing secret. citeturn0search4
+- A webhook can call `license_sign` with purchaser email + device id and email the license file.
+
+### Local Webhook (Rust)
+```bash
+export LEMON_WEBHOOK_SECRET=your_secret
+export SCRUBBY_PRIVATE_KEY_B64=your_private_key_b64
+export SCRUBBY_LICENSE_OUT_DIR=./licenses
+cargo run --bin ls_webhook
+```
+
+### Render Deploy (Fast Path)
+1. Create a **Render Web Service** from this repo.
+   - Or use `render.yaml` for one-click deploy.
+2. Build command:
+   ```bash
+   cargo build --release
+   ```
+3. Start command:
+   ```bash
+   ./target/release/ls_webhook
+   ```
+4. Set env vars:
+   - `LEMON_WEBHOOK_SECRET`
+   - `SCRUBBY_PRIVATE_KEY_B64`
+   - `SCRUBBY_LICENSE_OUT_DIR` (e.g., `/tmp/licenses`)
+5. In LemonSqueezy, set webhook URL to:
+   - `https://<your-render-app>.onrender.com/webhook`
+
+### Local E2E Test (No external services)
+```bash
+cargo test -p scrubby ls_webhook::tests::end_to_end_webhook_writes_license
+```
+
+### LemonSqueezy Checkout Custom Data
+- Pass `device_id` via checkout custom data so it arrives in webhook `meta.custom_data` (required for device-bound licenses). citeturn0search5turn0search2
+
+## Communication Notes
+- State clearly: Pro licenses are device-bound.
+- Offer re-issue on device changes.
+
+## Customer Instructions (Pro)
+1. Download the Pro binary.
+2. Place `license.key` at:
+   - `~/.config/scrubby/license.key`
+3. Run Pro features:
+   ```bash
+   scrubby --stable
+   scrubby --json
+   scrubby --config ./scrubby.conf
+   ```
+
+## FAQ Snippets
+**Q: Does Scrubby send any data to the cloud?**
+A: No. All detection and redaction is local.
+
+**Q: Can I run watch mode all the time?**
+A: It’s experimental and opt-in only. Use `scrubby --watch` if needed.

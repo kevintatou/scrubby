@@ -1,0 +1,4 @@
+/target
+/licenses
+.env
+.DS_Store

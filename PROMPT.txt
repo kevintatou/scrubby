@@ -1,0 +1,21 @@
+You are helping with a Rust microproduct called "Scrubby".
+
+Context (tight scope, not overbuilt):
+- Scrubby is a local-first, clipboard-focused CLI that sanitizes text before pasting into AI tools.
+- It is NOT a SaaS. It uses offline licensing.
+- Core command: `scrubby --clipboard` reads clipboard, redacts emails/IPs/UUID v4/JWT/high-entropy tokens, writes back, prints summary.
+- Linux clipboard support: wl-clipboard (Wayland), xclip/xsel (X11). macOS: pbpaste/pbcopy.
+- Watch mode: `scrubby --watch` (polling) for optional automatic scrubbing.
+- Pro features are minimal and focused: stable placeholders (<EMAIL_1>), JSON report, config file, file/stdin mode.
+- Pro gating is local-only: requires Cargo feature flags and a license file at `~/.config/scrubby/license.key` (or env `SCRUBBY_LICENSE=DEV` for testing).
+- Config format is simple key=value: stable_placeholders, json_report, interval_ms.
+- Optional systemd user service for watch mode: `scripts/scrubby-watch.service`.
+- Local install helper: `scripts/install-local.sh`.
+- Landing page: `landing.html` and `docs/index.html`.
+
+What I need from you:
+- Evaluate whether our current scope is still tight and aligned with the original intent (microproduct, local-only, minimal features).
+- Call out any scope creep or off-target decisions.
+- Recommend any cuts or simplifications if needed.
+
+Please keep responses concise and pragmatic.

@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: scrubby-webhook
+    env: rust
+    plan: free
+    buildCommand: cargo build --release
+    startCommand: ./target/release/ls_webhook
+    envVars:
+      - key: LEMON_WEBHOOK_SECRET
+        sync: false
+      - key: SCRUBBY_PRIVATE_KEY_B64
+        sync: false
+      - key: SCRUBBY_LICENSE_OUT_DIR
+        value: /tmp/licenses
